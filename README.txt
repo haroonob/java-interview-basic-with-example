@@ -4,7 +4,7 @@ This repository contains a series of **Java interview questions** along with **r
 
 Each example is accompanied by comments and explanations, making it easy to learn and understand core Java concepts for interviews or practical usage.
 
----
+--
 
 ## Table of Contents
 
