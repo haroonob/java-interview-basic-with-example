@@ -1,8 +1,18 @@
 # Java Interview Basics with Examples
 
-This repository contains a series of **Java interview questions** along with **runnable examples**. The examples cover Java concepts from **Java 8 to Java 21**, including **threads, lambdas, streams, functional interfaces, CompletableFuture, ReentrantLock, Semaphore, virtual threads, structured concurrency, modules, records, switch patterns**, and more.
+This repository contains a series of **Java interview questions** along with **runnable examples**.  
+The examples cover Java concepts from **Java 8 to Java 21**, including:
 
-Each example is accompanied by comments and explanations, making it easy to learn and understand core Java concepts for interviews or practical usage.
+- Lambdas & Method References
+- Streams & Optionals
+- CompletableFuture & Concurrency APIs
+- ReentrantLock & Semaphore
+- Virtual Threads (Project Loom)
+- Structured Concurrency
+- Records, Modules, Switch Patterns
+- Sequenced Collections
+
+Each example is explained with **description, use case, and solution**, making it easy to learn and prepare for Java interviews or apply in real projects.
 
 ---
 
@@ -12,7 +22,7 @@ Each example is accompanied by comments and explanations, making it easy to lear
 - [Q02: Method References](#q02-method-references)
 - [Q03: Functional Interfaces](#q03-functional-interfaces)
 - [Q04: Streams - Filter and Map](#q04-streams---filter-and-map)
-- [Q05: Streams - Reduce](#q05-stream-reduce)
+- [Q05: Streams - Reduce](#q05-streams---reduce)
 - [Q06: Collectors - Grouping](#q06-collectors---grouping)
 - [Q07: Optional Basics](#q07-optional-basics)
 - [Q08: Optional - orElse and orElseGet](#q08-optional---orelse-and-orelseget)
@@ -20,148 +30,270 @@ Each example is accompanied by comments and explanations, making it easy to lear
 - [Q10: CompletableFuture Basics](#q10-completablefuture-basics)
 - [Q11: CompletableFuture - Chaining](#q11-completablefuture---chaining)
 - [Q12: CompletableFuture - Exception Handling](#q12-completablefuture---exception-handling)
-- [More Advanced Examples](#more-advanced-examples)
+- [Advanced Examples](#advanced-examples)
 
 ---
 
 ## Q01: Lambda Basics
 
-**Objective:** Understand the syntax and usage of lambda expressions in Java.
+**Description:**  
+Lambda expressions provide a concise way to implement functional interfaces.
 
+**Use Case:**  
+Used in collections, event listeners, concurrency, and functional-style APIs.
+
+**Solution:**
 ```java
 Runnable r = () -> System.out.println("Hello from Lambda!");
 r.run();
-Explanation: Demonstrates a simple lambda expression implementing the Runnable interface.
+```
 
-Q02: Method References
-Objective: Use method references as a shorthand for lambda expressions.
+---
 
-java
-Copy code
+## Q02: Method References
+
+**Description:**  
+Method references simplify lambdas by reusing existing methods.
+
+**Use Case:**  
+Cleaner syntax when method logic is already implemented.
+
+**Solution:**
+```java
+class MyClass {
+    static void printMessage() {
+        System.out.println("Hello from Method Reference!");
+    }
+}
+
 Runnable r = MyClass::printMessage;
 r.run();
-Explanation: Replaces a lambda with a method reference for cleaner code.
+```
 
-Q03: Functional Interfaces
-Objective: Learn about functional interfaces and using lambdas to implement them.
+---
 
-java
-Copy code
+## Q03: Functional Interfaces
+
+**Description:**  
+A functional interface has a single abstract method, making it compatible with lambdas.
+
+**Use Case:**  
+Core to Java functional programming (`Predicate`, `Consumer`, etc.).
+
+**Solution:**
+```java
 @FunctionalInterface
 interface MyFunctionalInterface {
     void execute();
 }
+
 MyFunctionalInterface myFunc = () -> System.out.println("Executing functional interface!");
 myFunc.execute();
-Q04: Streams - Filter and Map
-java
-Copy code
+```
+
+---
+
+## Q04: Streams - Filter and Map
+
+**Description:**  
+Streams process collections declaratively.
+
+**Use Case:**  
+Filtering and transforming lists.
+
+**Solution:**
+```java
 List<String> names = Arrays.asList("Alice", "Bob", "Charlie");
-List<String> filteredNames = names.stream()
-                                  .filter(n -> n.startsWith("A"))
-                                  .map(String::toUpperCase)
-                                  .collect(Collectors.toList());
-Explanation: Filters and transforms elements using Stream operations.
+List<String> filtered = names.stream()
+                             .filter(n -> n.startsWith("A"))
+                             .map(String::toUpperCase)
+                             .toList();
+System.out.println(filtered); // [ALICE]
+```
 
-Q05: Streams - Reduce
-java
-Copy code
+---
+
+## Q05: Streams - Reduce
+
+**Description:**  
+Reduce combines elements into a single result.
+
+**Use Case:**  
+Summation, aggregation, concatenation.
+
+**Solution:**
+```java
 List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
-Optional<Integer> sum = numbers.stream().reduce((a, b) -> a + b);
-sum.ifPresent(System.out::println);
-Explanation: Combines elements of a stream into a single result.
+Optional<Integer> sum = numbers.stream().reduce(Integer::sum);
+sum.ifPresent(System.out::println); // 15
+```
 
-Q06: Collectors - Grouping
-java
-Copy code
+---
+
+## Q06: Collectors - Grouping
+
+**Description:**  
+Collectors group elements by a key.
+
+**Use Case:**  
+Building maps of categorized data.
+
+**Solution:**
+```java
 List<String> words = Arrays.asList("apple", "banana", "apricot");
-Map<Character, List<String>> groupedWords = words.stream()
-    .collect(Collectors.groupingBy(word -> word.charAt(0)));
-Explanation: Groups elements based on a key.
+Map<Character, List<String>> grouped = words.stream()
+        .collect(Collectors.groupingBy(w -> w.charAt(0)));
+System.out.println(grouped); // {a=[apple, apricot], b=[banana]}
+```
 
-Q07: Optional Basics
-java
-Copy code
+---
+
+## Q07: Optional Basics
+
+**Description:**  
+Optional prevents null pointer exceptions.
+
+**Use Case:**  
+Return values that may be missing.
+
+**Solution:**
+```java
 Optional<String> name = Optional.ofNullable("John");
-name.ifPresent(System.out::println);
-Explanation: Safely handles potential null values.
+name.ifPresent(System.out::println); // John
+```
 
-Q08: Optional - orElse and orElseGet
-java
-Copy code
+---
+
+## Q08: Optional - orElse and orElseGet
+
+**Description:**  
+Provides default values if empty.
+
+**Use Case:**  
+Safe fallbacks for missing data.
+
+**Solution:**
+```java
 Optional<String> name = Optional.empty();
 String defaultName = name.orElse("Default Name");
-String generatedName = name.orElseGet(() -> "Generated Name");
-Explanation: Provides default values when Optional is empty.
+String generated = name.orElseGet(() -> "Generated Name");
+System.out.println(defaultName); // Default Name
+System.out.println(generated);   // Generated Name
+```
 
-Q09: Parallel Streams
-java
-Copy code
+---
+
+## Q09: Parallel Streams
+
+**Description:**  
+Parallel streams split work across threads.
+
+**Use Case:**  
+Large data processing with parallelism.
+
+**Solution:**
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
 numbers.parallelStream()
        .forEach(n -> System.out.println(Thread.currentThread().getName() + ": " + n));
-Explanation: Processes elements concurrently.
+```
 
-Q10: CompletableFuture Basics
-java
-Copy code
-CompletableFuture<Void> future = CompletableFuture.runAsync(() ->
-    System.out.println("Asynchronous task executed!")
-);
+---
+
+## Q10: CompletableFuture Basics
+
+**Description:**  
+CompletableFuture runs async tasks.
+
+**Use Case:**  
+Background operations without blocking.
+
+**Solution:**
+```java
+CompletableFuture<Void> future =
+    CompletableFuture.runAsync(() -> System.out.println("Async task executed!"));
 future.join();
-Q11: CompletableFuture - Chaining
-java
-Copy code
+```
+
+---
+
+## Q11: CompletableFuture - Chaining
+
+**Description:**  
+Compose multiple async steps.
+
+**Use Case:**  
+Pipelines of dependent async tasks.
+
+**Solution:**
+```java
 CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> 5)
-    .thenApplyAsync(x -> x * 2)
-    .thenApplyAsync(x -> x + 3);
-future.thenAccept(System.out::println).join();
-Q12: CompletableFuture - Exception Handling
-java
-Copy code
+    .thenApply(x -> x * 2)
+    .thenApply(x -> x + 3);
+
+future.thenAccept(System.out::println).join(); // 13
+```
+
+---
+
+## Q12: CompletableFuture - Exception Handling
+
+**Description:**  
+Handle exceptions gracefully in async flows.
+
+**Use Case:**  
+Resilient async processing.
+
+**Solution:**
+```java
 CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
-    throw new RuntimeException("Exception occurred!");
+    throw new RuntimeException("Error!");
 }).exceptionally(ex -> {
     System.out.println("Handled: " + ex.getMessage());
     return -1;
 });
-future.join();
-More Advanced Examples
-The repository also includes advanced Java 8–21 examples covering:
+System.out.println(future.join()); // -1
+```
 
-ReentrantLock: Thread-safe locks with fairness and conditions.
+---
 
-Semaphore & Binary Semaphore: Controlling concurrent access to resources.
+## Advanced Examples
 
-Virtual Threads (Project Loom): Lightweight threads in Java 21.
+- **ReentrantLock:** Fine-grained lock control with fairness policies.
+- **Semaphore / Binary Semaphore:** Limit concurrent access to resources.
+- **Virtual Threads (Java 21):** Lightweight concurrency model (Project Loom).
+- **Structured Concurrency (Java 21 preview):** Manage multiple async tasks as a unit.
+- **Records (Java 16+):** Immutable data carriers with compact syntax.
+- **Switch Pattern Matching (Java 17+):** Cleaner, safer switch expressions.
+- **Sequenced Collections (Java 21):** Collections maintaining insertion order.
 
-Structured Concurrency: Managing multiple tasks safely and cleanly.
+---
 
-Records: Immutable data carriers (Java 16+).
+## How to Run the Examples
 
-Switch Pattern Matching: Enhanced switch features in recent JDKs.
-
-Sequenced Collections: Collections that maintain insertion order.
-
-How to Run the Examples
-Clone the Repository:
-
-bash
-Copy code
+1. **Clone the repository:**
+```bash
 git clone https://github.com/haroonob/java-interview-basic-with-example.git
 cd java-interview-basic-with-example
-Compile and Run a Specific Example:
+```
 
-bash
-Copy code
+2. **Compile and run an example:**
+```bash
 javac Q01_LambdaBasics.java
 java Q01_LambdaBasics
-Java 21 Preview Features: For examples using Structured Concurrency or Virtual Threads, add:
+```
 
-bash
-Copy code
+3. **Run Java 21 preview features (Structured Concurrency, Virtual Threads):**
+```bash
 javac --enable-preview --release 21 Q48_StructuredConcurrencyComment.java
 java --enable-preview Q48_StructuredConcurrencyComment
-Conclusion
-This repository is a comprehensive collection of Java interview questions and practical examples. It covers both core Java and modern features up to Java 21, including concurrent programming, streams, lambdas, and modules.
+```
 
-Use these examples to practice coding, understand concepts, and prepare for Java interviews.
+---
+
+## Conclusion
+
+This repository is a **practical guide for Java interviews and learning modern Java**.  
+It covers essential concepts from **Java 8–21**, including **functional programming, streams, concurrency, and new JDK features**.
+
+Use these examples to **practice coding, strengthen concepts, and prepare confidently** for interviews.
